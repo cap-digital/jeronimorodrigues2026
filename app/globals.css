@@ -2,26 +2,211 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   PAINEL JERÔNIMO 2026 — sistema de design (tema claro)
+   Identidade PT: vermelho #e4142c / #b9142c sobre BRANCO
+   Cores de gráfico validadas (dataviz skill, modo claro,
+   superfície #ffffff): ver lib/theme.ts
+   ============================================================ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+
+  /* Marca PT */
+  --pt-red: #e4142c;
+  --pt-red-dark: #b9142c;
+  --pt-red-bright: #e4142c;
+  --pt-red-soft: #fde8ea; /* vermelho lavado p/ realces */
+  --pt-gradient: linear-gradient(150deg, #e4142c 0%, #b9142c 100%);
+
+  /* Superfícies */
+  --plane: #f4f4f2; /* fundo da página */
+  --surface-1: #ffffff; /* painéis / superfície de gráfico */
+  --surface-2: #ffffff; /* cartões */
+  --surface-3: #f1f1ef; /* hover / realces */
+
+  /* Tinta */
+  --ink-primary: #17171b;
+  --ink-secondary: #55555d;
+  --ink-muted: #86868e;
+
+  /* Traços */
+  --grid: #ededeb;
+  --axis: #d7d7d3;
+  --border: rgba(0, 0, 0, 0.09);
+  --border-strong: rgba(0, 0, 0, 0.14);
+
+  /* Séries categóricas (validadas — claro) */
+  --series-red: #e4142c;
+  --series-purple: #7c3aed;
+  --series-teal: #199e70;
+  --series-amber: #c98500;
+  --series-magenta: #cf3a7f;
+  --neutral: #9a9aa2;
+
+  /* Status */
+  --good: #0f9d0f;
+  --warning: #c98500;
+  --critical: #d3122a;
+
+  /* Sidebar (vermelho PT) */
+  --nav-bg: #d3122a;
+  --nav-ink: rgba(255, 255, 255, 0.86);
+  --nav-ink-dim: rgba(255, 255, 255, 0.62);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  max-width: 100%;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--ink-primary);
+  background: var(--plane);
+  font-family: var(--font-sans), system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.font-display {
+  font-family: var(--font-display), "Arial Narrow", system-ui, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+[id] {
+  scroll-margin-top: 88px;
+}
+
+/* Barra de rolagem discreta */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #d9d9d5;
+  border-radius: 8px;
+  border: 2px solid var(--plane);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c4c4bf;
+}
+
+@layer components {
+  .panel {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 1px 2px rgba(16, 16, 20, 0.04),
+      0 8px 24px -18px rgba(16, 16, 20, 0.18);
+  }
+  .panel-2 {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 1px 2px rgba(16, 16, 20, 0.04);
+  }
+  .hairline {
+    border-color: var(--border);
+  }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+  .glow-red {
+    box-shadow: 0 10px 30px -10px rgba(228, 20, 44, 0.5);
+  }
+  .fade-up {
+    animation: fadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes livePulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+}
+.live-dot {
+  animation: livePulse 1.6s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: #ececea;
+  border-radius: 12px;
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
+  animation: shimmer 1.4s infinite;
+}
+
+@keyframes spinSlow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.spin {
+  animation: spinSlow 0.9s linear infinite;
+}
+
+.recharts-wrapper:focus,
+.recharts-surface:focus,
+.recharts-sector:focus {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
   }
 }
