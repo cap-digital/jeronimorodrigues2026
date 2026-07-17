@@ -53,7 +53,7 @@ export default async function Home() {
             <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.28em] text-white/80 sm:text-xs">
               Painel de campanha · Meta Ads
             </p>
-            <h1 className="font-display text-balance text-4xl leading-[1.06] sm:text-6xl lg:text-7xl">
+            <h1 className="font-display text-balance text-4xl/[1.35] sm:text-6xl/[1.35] lg:text-7xl/[1.35]">
               Central de inteligência de mídia
             </h1>
             <p className="mt-6 max-w-xl text-base leading-relaxed text-white/90 sm:text-lg">
