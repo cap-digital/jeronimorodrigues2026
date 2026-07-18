@@ -1,27 +1,28 @@
 "use client";
 
-/* Minigráfico de linha (SVG puro, sem dependência de Recharts). */
+/* Minigráfico de linha (SVG puro). Não desenha para fora do próprio box. */
 function MiniSpark({ data, color }: { data: number[]; color: string }) {
   if (!data || data.length < 2) return null;
-  const w = 96;
-  const h = 30;
+  const w = 60;
+  const h = 26;
+  const pad = 3;
   const min = Math.min(...data);
   const max = Math.max(...data);
   const range = max - min || 1;
-  const step = w / (data.length - 1);
+  const step = (w - pad) / (data.length - 1);
   const pts = data.map((v, i) => {
-    const x = i * step;
-    const y = h - ((v - min) / range) * (h - 4) - 2;
+    const x = pad / 2 + i * step;
+    const y = h - pad - ((v - min) / range) * (h - pad * 2);
     return [x, y] as const;
   });
   const line = pts.map((p) => p.join(",")).join(" ");
   const area = `${pts[0][0]},${h} ${line} ${pts[pts.length - 1][0]},${h}`;
   const id = `sp-${color.replace(/[^a-z0-9]/gi, "")}`;
   return (
-    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} className="overflow-visible">
+    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} className="shrink-0">
       <defs>
         <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor={color} stopOpacity="0.28" />
+          <stop offset="0" stopColor={color} stopOpacity="0.26" />
           <stop offset="1" stopColor={color} stopOpacity="0" />
         </linearGradient>
       </defs>
@@ -34,7 +35,7 @@ function MiniSpark({ data, color }: { data: number[]; color: string }) {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <circle cx={pts[pts.length - 1][0]} cy={pts[pts.length - 1][1]} r="2.6" fill={color} />
+      <circle cx={pts[pts.length - 1][0]} cy={pts[pts.length - 1][1]} r="2.2" fill={color} />
     </svg>
   );
 }
@@ -56,9 +57,7 @@ export function KpiCard({
 }) {
   return (
     <div
-      className={`panel-2 fade-up flex flex-col justify-between p-4 ${
-        hero ? "sm:p-5" : ""
-      }`}
+      className={`panel-2 fade-up flex flex-col overflow-hidden p-4 ${hero ? "sm:p-5" : ""}`}
     >
       <div className="flex items-start justify-between gap-2">
         <p className="text-[11px] font-semibold uppercase tracking-wider text-ink-muted">
@@ -66,9 +65,15 @@ export function KpiCard({
         </p>
         {hero && spark && <MiniSpark data={spark} color={color} />}
       </div>
-      <div className="mt-2">
+
+      {/* corpo ocupa o espaço restante; centraliza quando não há legenda */}
+      <div
+        className={`mt-2 flex min-w-0 flex-1 flex-col ${
+          caption ? "justify-end" : "justify-center"
+        }`}
+      >
         <p
-          className={`font-display tabular leading-none ${
+          className={`truncate font-display tabular leading-none ${
             hero ? "text-3xl sm:text-4xl" : "text-2xl"
           }`}
         >
