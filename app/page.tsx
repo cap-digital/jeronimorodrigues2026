@@ -102,7 +102,7 @@ export default async function Home() {
       </section>
 
       <footer className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 border-t px-5 py-6 text-xs text-ink-muted sm:flex-row sm:px-8">
-        <p>Painel desenvolvido por CAP.CO · uso interno da campanha</p>
+        <p>Uso interno da campanha</p>
         <p>Fonte: Meta Ads · atualização diária</p>
       </footer>
     </main>

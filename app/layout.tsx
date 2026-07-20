@@ -24,7 +24,6 @@ export const metadata: Metadata = {
   description:
     "Central de inteligência de mídia da pré-campanha de Jerônimo Rodrigues — dados de tráfego pago (Meta Ads) em tempo quase real.",
   applicationName: "Painel Jerônimo 2026",
-  authors: [{ name: "CAP.CO" }],
   robots: { index: false, follow: false },
 };
 

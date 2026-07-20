@@ -94,7 +94,7 @@ export function Sidebar({
             Voltar ao início
           </Link>
           <p className="px-3 pt-3 text-[10px] text-white/55">
-            CAP.CO · Meta Ads · PT
+            Meta Ads · PT
           </p>
         </div>
        </div>
