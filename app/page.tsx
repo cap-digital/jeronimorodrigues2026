@@ -70,8 +70,18 @@ export default async function Home() {
                 Acessar o painel
                 <span className="transition-transform group-hover:translate-x-1">→</span>
               </Link>
-              {updated && <span className="text-xs text-white/75 sm:ml-2">Dados atualizados em {updated}</span>}
+              <Link
+                href="/relatorios"
+                className="group inline-flex items-center justify-center gap-2 rounded-xl bg-white/12 px-7 py-4 text-base font-semibold text-white ring-1 ring-white/35 backdrop-blur-sm transition-colors hover:bg-white/20"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <path d="M14 2v6h6M9 13h6M9 17h6" />
+                </svg>
+                Acessar Relatórios
+              </Link>
             </div>
+            {updated && <span className="mt-3 block text-xs text-white/75">Dados atualizados em {updated}</span>}
           </div>
         </div>
       </section>
