@@ -99,14 +99,27 @@ export function RelatoriosClient({ configured }: { configured: boolean }) {
               <p className="text-[11px] text-white/75">Relatórios da campanha</p>
             </div>
           </Link>
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center gap-2 rounded-lg bg-white/15 px-3 py-2 text-xs font-medium ring-1 ring-white/25 transition-colors hover:bg-white/25"
-          >
-            <span className="hidden sm:inline">Acessar o painel</span>
-            <span className="sm:hidden">Painel</span>
-            <span aria-hidden>→</span>
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center gap-2 rounded-lg bg-white/15 px-3 py-2 text-xs font-medium ring-1 ring-white/25 transition-colors hover:bg-white/25"
+            >
+              <span className="hidden sm:inline">Acessar o painel</span>
+              <span className="sm:hidden">Painel</span>
+              <span aria-hidden>→</span>
+            </Link>
+            <a
+              href="/api/logout"
+              className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-2 text-xs font-medium text-white/80 ring-1 ring-white/25 transition-colors hover:bg-white/10 hover:text-white"
+              aria-label="Sair"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <path d="M16 17l5-5-5-5M21 12H9" />
+              </svg>
+              <span className="hidden sm:inline">Sair</span>
+            </a>
+          </div>
         </div>
       </header>
 

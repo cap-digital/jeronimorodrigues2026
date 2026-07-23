@@ -93,6 +93,13 @@ export function Sidebar({
             <IconArrowLeft />
             Voltar ao início
           </Link>
+          <a
+            href="/api/logout"
+            className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+          >
+            <IconLogout />
+            Sair
+          </a>
           <p className="px-3 pt-3 text-[10px] text-white/55">
             Meta Ads · PT
           </p>
@@ -125,4 +132,7 @@ function IconTarget() {
 }
 function IconArrowLeft() {
   return base(<><path d="m12 19-7-7 7-7" /><path d="M19 12H5" /></>);
+}
+function IconLogout() {
+  return base(<><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><path d="M16 17l5-5-5-5M21 12H9" /></>);
 }
