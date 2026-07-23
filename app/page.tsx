@@ -92,6 +92,17 @@ export default async function Home() {
                 </svg>
                 Acessar Relatórios
               </Link>
+              <Link
+                href="/comparativo"
+                className="group inline-flex items-center justify-center gap-2 rounded-xl bg-white/12 px-7 py-4 text-base font-semibold text-white ring-1 ring-white/35 backdrop-blur-sm transition-colors hover:bg-white/20"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+                  <path d="M3 3v18h18" />
+                  <rect x="7" y="11" width="3" height="6" rx="0.5" />
+                  <rect x="13" y="7" width="3" height="10" rx="0.5" />
+                </svg>
+                Comparar criativos
+              </Link>
             </div>
             {updated && <span className="mt-3 block text-xs text-white/75">Dados atualizados em {updated}</span>}
           </div>

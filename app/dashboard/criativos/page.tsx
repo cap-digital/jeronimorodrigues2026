@@ -1,5 +1,6 @@
 "use client";
 import { useMemo } from "react";
+import Link from "next/link";
 import { useDashboard } from "@/lib/dashboardContext";
 import { byCreative, themeCreative, CreativeStat } from "@/lib/transform";
 import { fmtBRL, fmtInt, fmtPct } from "@/lib/format";
@@ -38,6 +39,17 @@ export default function CriativosPage() {
             Melhor desempenho de cliques: <strong>{themeCreative(bestCtr.ad_name)}</strong> com CTR de {fmtPct(bestCtr.kpis.ctr)}.
           </p>
         )}
+        <Link
+          href="/comparativo"
+          className="mt-4 inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-[var(--pt-red-dark)] shadow-sm transition-transform hover:-translate-y-0.5"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M3 3v18h18" />
+            <rect x="7" y="11" width="3" height="6" rx="0.5" />
+            <rect x="13" y="7" width="3" height="10" rx="0.5" />
+          </svg>
+          Abrir comparativo de criativos
+        </Link>
       </div>
 
       {/* movimento: 42/58 — gráfico + tabela ordenável */}
