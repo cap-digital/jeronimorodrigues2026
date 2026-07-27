@@ -104,8 +104,8 @@ export function RelatoriosClient({ configured }: { configured: boolean }) {
               href="/dashboard"
               className="inline-flex items-center gap-2 rounded-lg bg-white/15 px-3 py-2 text-xs font-medium ring-1 ring-white/25 transition-colors hover:bg-white/25"
             >
-              <span className="hidden sm:inline">Acessar o painel</span>
-              <span className="sm:hidden">Painel</span>
+              <span className="hidden sm:inline">Acessar Dashboard</span>
+              <span className="sm:hidden">Dashboard</span>
               <span aria-hidden>→</span>
             </Link>
             <a

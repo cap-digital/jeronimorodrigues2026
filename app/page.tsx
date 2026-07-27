@@ -69,19 +69,32 @@ export default async function Home() {
               Central de inteligência de mídia
             </h1>
             <p className="mt-6 max-w-xl text-base leading-relaxed text-white/90 sm:text-lg">
-              Acompanhamento do tráfego pago da pré-candidatura de{" "}
+              Acompanhamento dos dados de performance, mídia e relatórios da pré-candidatura de{" "}
               <strong className="text-white">Jerônimo Rodrigues</strong>. Investimento, alcance,
               público e criativos — tudo em um só lugar.
             </p>
 
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
               <Link
                 href="/dashboard"
                 className="group inline-flex items-center justify-center gap-2 rounded-xl bg-white px-7 py-4 text-base font-semibold text-[var(--pt-red-dark)] shadow-lg transition-transform hover:-translate-y-0.5"
               >
-                Acessar o painel
+                Acessar Dashboard
                 <span className="transition-transform group-hover:translate-x-1">→</span>
               </Link>
+              <a
+                href="https://app.reportei.com/dashboard/d7yB8hJzXBOqH0do8GHeQXRfd7rmPvFZ"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-center justify-center gap-2 rounded-xl bg-white/12 px-7 py-4 text-base font-semibold text-white ring-1 ring-white/35 backdrop-blur-sm transition-colors hover:bg-white/20"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+                  <path d="M3 3v18h18" />
+                  <path d="m7 14 3-3 3 3 4-5" />
+                </svg>
+                Painel Performance (Reportei)
+                <span aria-hidden className="text-white/70">↗</span>
+              </a>
               <Link
                 href="/relatorios"
                 className="group inline-flex items-center justify-center gap-2 rounded-xl bg-white/12 px-7 py-4 text-base font-semibold text-white ring-1 ring-white/35 backdrop-blur-sm transition-colors hover:bg-white/20"

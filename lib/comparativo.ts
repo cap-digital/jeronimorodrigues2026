@@ -194,7 +194,7 @@ export function buildEvolution(details: CreativeDetail[], metricKey: string): Ev
     const valores = dias.map((dia) =>
       d.rows.filter((r) => r.date.slice(0, 10) === dia).reduce((s, r) => s + evo.get(r), 0)
     );
-    return { short: d.short, valores };
+    return { key: d.ad_name, valores };
   });
   const maxDays = Math.max(1, ...perAd.map((p) => p.valores.length));
   const blockSize = Math.max(1, Math.ceil(maxDays / 20));
@@ -206,11 +206,11 @@ export function buildEvolution(details: CreativeDetail[], metricKey: string): Ev
     for (const p of perAd) {
       const start = bi * blockSize;
       if (start >= p.valores.length) continue; // criativo já terminou
-      row[p.short] = p.valores.slice(start, start + blockSize).reduce((s, v) => s + v, 0);
+      row[p.key] = p.valores.slice(start, start + blockSize).reduce((s, v) => s + v, 0);
     }
     data.push(row);
   }
-  return { data, blockSize, keys: perAd.map((p) => p.short) };
+  return { data, blockSize, keys: perAd.map((p) => p.key) };
 }
 
 /* ---------- análise qualitativa (texto pronto) ---------- */
@@ -226,14 +226,13 @@ export function gerarAnalise(details: CreativeDetail[], dataHora: string): strin
 
   for (const d of details) {
     const k = d.kpis;
-    const tema = temaDe(d.ad_name);
     const freq = k.frequency > 0 ? `, vistas em média ${fmtDec(k.frequency, 1)}× por pessoa` : "";
     const ctrTxt =
       k.ctr > 0
         ? ` O CTR foi de ${fmtPct(k.ctr)}: de cada 100 pessoas que viram, cerca de ${Math.round(k.ctr)} clicaram.`
         : "";
     L.push(
-      `▸ ${d.short}${tema ? ` (${tema})` : ""} — objetivo ${d.objetivo}. Ficou no ar por ${d.activeDays} ` +
+      `▸ ${d.ad_name} — objetivo ${d.objetivo}. Ficou no ar por ${d.activeDays} ` +
         `dia${d.activeDays === 1 ? "" : "s"}. Com investimento de ${fmtBRL(d.totals.spend)}, foi exibido ` +
         `${fmtCompact(d.totals.impressions)} vezes e alcançou ${fmtCompact(d.totals.reach)} pessoas${freq}.` +
         ctrTxt +
@@ -253,10 +252,10 @@ export function gerarAnalise(details: CreativeDetail[], dataHora: string): strin
 
   L.push("COMPARAÇÃO");
   const comp: string[] = [];
-  if (bestReach) comp.push(`em alcance, o ${bestReach.short} chegou a mais pessoas (${fmtCompact(bestReach.totals.reach)})`);
-  if (bestCtr && bestCtr.kpis.ctr > 0) comp.push(`em taxa de cliques, o ${bestCtr.short} se destacou com ${fmtPct(bestCtr.kpis.ctr)}`);
-  if (bestCpm) comp.push(`para entregar mais barato (CPM), o ${bestCpm.short} foi o mais econômico, a ${fmtBRL(bestCpm.kpis.cpm)} por mil impressões`);
-  if (bestEngRate) comp.push(`na proporção de interações por exibição, o público reagiu mais ao ${bestEngRate.d.short}`);
+  if (bestReach) comp.push(`em alcance, o "${bestReach.ad_name}" chegou a mais pessoas (${fmtCompact(bestReach.totals.reach)})`);
+  if (bestCtr && bestCtr.kpis.ctr > 0) comp.push(`em taxa de cliques, o "${bestCtr.ad_name}" se destacou com ${fmtPct(bestCtr.kpis.ctr)}`);
+  if (bestCpm) comp.push(`para entregar mais barato (CPM), o "${bestCpm.ad_name}" foi o mais econômico, a ${fmtBRL(bestCpm.kpis.cpm)} por mil impressões`);
+  if (bestEngRate) comp.push(`na proporção de interações por exibição, o público reagiu mais ao "${bestEngRate.d.ad_name}"`);
   L.push(capitalize(comp.join("; ")) + ".");
   L.push("");
 
@@ -268,7 +267,7 @@ export function gerarAnalise(details: CreativeDetail[], dataHora: string): strin
     );
   } else if (bestReach) {
     L.push(
-      `Para o objetivo desta campanha (${objetivos[0]}), o ${bestReach.short} entregou o maior alcance; o ${bestCpm?.short ?? bestReach.short} teve o menor custo por mil impressões.`
+      `Para o objetivo desta campanha (${objetivos[0]}), o "${bestReach.ad_name}" entregou o maior alcance; o "${bestCpm?.ad_name ?? bestReach.ad_name}" teve o menor custo por mil impressões.`
     );
   }
   return L.join("\n");

@@ -69,12 +69,11 @@ export function MetricDuel({
               <div className="space-y-4 border-t px-4 py-4 sm:px-5">
                 {metrics.map((m) => {
                   const cells = details.map((d) => cell(m, d, modo));
-                  const max = Math.max(0, ...cells.map((c) => c.n));
                   const vencedor = winnerFor(m, details, modo);
                   const sufixo = m.perDay && modo === "media" ? " /dia" : "";
                   return (
                     <div key={m.key}>
-                      <div className="mb-1.5 flex items-baseline justify-between gap-2">
+                      <div className="mb-1 flex items-baseline justify-between gap-2">
                         <span className="text-sm font-medium text-ink">
                           {m.label}
                           {sufixo && <span className="text-ink-muted">{sufixo}</span>}
@@ -85,29 +84,23 @@ export function MetricDuel({
                           </span>
                         )}
                       </div>
-                      <div className="space-y-1.5">
+                      <div className="divide-y divide-[var(--border)] overflow-hidden rounded-lg border">
                         {details.map((d, i) => {
                           const c = cells[i];
-                          const pct = max > 0 && c.n > 0 ? Math.max(5, (c.n / max) * 100) : 0;
                           const ganhou = vencedor === d.ad_name;
                           return (
-                            <div key={d.ad_name} className="flex items-center gap-2.5">
-                              <span className="flex w-14 shrink-0 items-center gap-1.5 text-[11px] text-ink-secondary">
-                                <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: colors[i] }} />
-                                {d.short.replace(/[[\]]/g, "")}
+                            <div
+                              key={d.ad_name}
+                              className={`flex items-start justify-between gap-3 px-3 py-2 ${
+                                ganhou ? "bg-[var(--good)]/10" : ""
+                              }`}
+                            >
+                              <span className="flex min-w-0 items-start gap-2 text-[13px] leading-snug text-ink-secondary">
+                                <span className="mt-1 h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: colors[i] }} />
+                                <span className="break-words">{d.ad_name}</span>
                               </span>
-                              <div className="relative h-7 flex-1 overflow-hidden rounded-md bg-surface-3">
-                                <div
-                                  className="absolute inset-y-0 left-0 rounded-md transition-all"
-                                  style={{
-                                    width: `${pct}%`,
-                                    background: colors[i],
-                                    opacity: ganhou ? 1 : 0.55,
-                                  }}
-                                />
-                              </div>
                               <span
-                                className={`w-[96px] shrink-0 text-right text-sm tabular ${
+                                className={`shrink-0 pt-px text-right text-sm tabular ${
                                   ganhou ? "font-bold text-[var(--good)]" : "text-ink"
                                 }`}
                               >

@@ -47,8 +47,8 @@ export function EvolutionChart({
       <div className="mb-2 flex flex-wrap items-center gap-4">
         {details.map((d, i) => (
           <span key={d.ad_name} className="inline-flex items-center gap-1.5 text-xs text-ink-secondary">
-            <span className="h-2.5 w-4 rounded-full" style={{ background: colors[i] }} />
-            {d.short}
+            <span className="h-2.5 w-4 shrink-0 rounded-full" style={{ background: colors[i] }} />
+            {d.ad_name}
           </span>
         ))}
       </div>
@@ -91,7 +91,7 @@ export function EvolutionChart({
               <Line
                 key={d.ad_name}
                 type="monotone"
-                dataKey={d.short}
+                dataKey={d.ad_name}
                 stroke={colors[i]}
                 strokeWidth={2.4}
                 dot={{ r: 3, fill: colors[i], strokeWidth: 0 }}
