@@ -79,22 +79,19 @@ export default async function Home() {
                 href="/dashboard"
                 className="group inline-flex items-center justify-center gap-2 rounded-xl bg-white px-7 py-4 text-base font-semibold text-[var(--pt-red-dark)] shadow-lg transition-transform hover:-translate-y-0.5"
               >
-                Acessar Dashboard
+                Painel Mídia
                 <span className="transition-transform group-hover:translate-x-1">→</span>
               </Link>
-              <a
-                href="https://app.reportei.com/dashboard/d7yB8hJzXBOqH0do8GHeQXRfd7rmPvFZ"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/performance"
                 className="group inline-flex items-center justify-center gap-2 rounded-xl bg-white/12 px-7 py-4 text-base font-semibold text-white ring-1 ring-white/35 backdrop-blur-sm transition-colors hover:bg-white/20"
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
                   <path d="M3 3v18h18" />
                   <path d="m7 14 3-3 3 3 4-5" />
                 </svg>
-                Painel Performance (Reportei)
-                <span aria-hidden className="text-white/70">↗</span>
-              </a>
+                Painel Performance
+              </Link>
               <Link
                 href="/relatorios"
                 className="group inline-flex items-center justify-center gap-2 rounded-xl bg-white/12 px-7 py-4 text-base font-semibold text-white ring-1 ring-white/35 backdrop-blur-sm transition-colors hover:bg-white/20"
