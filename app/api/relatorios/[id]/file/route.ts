@@ -8,11 +8,13 @@ import {
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 
 /* GET /api/relatorios/:id/file?download=1
-   Gera um link assinado temporário e redireciona.
+   Baixa o arquivo do Storage no servidor e transmite os bytes de volta.
    - sem download: abre no navegador (Ler)
-   - download=1: força o download com o nome original (Baixar) */
+   - download=1: força o download com o nome original (Baixar)
+   A URL exposta ao navegador não carrega nenhum token/chave. */
 export async function GET(
   req: Request,
   { params }: { params: { id: string } }
@@ -30,7 +32,7 @@ export async function GET(
     const supabase = getAdminClient();
     const { data: row, error: findErr } = await supabase
       .from(RELATORIOS_TABLE)
-      .select("arquivo_path, arquivo_nome")
+      .select("arquivo_path, arquivo_nome, mime")
       .eq("id", params.id)
       .single();
     if (findErr) throw findErr;
@@ -38,15 +40,32 @@ export async function GET(
       return NextResponse.json({ error: "Arquivo não encontrado." }, { status: 404 });
     }
 
-    const { data, error } = await supabase.storage
+    const { data: blob, error } = await supabase.storage
       .from(RELATORIOS_BUCKET)
-      .createSignedUrl(row.arquivo_path, 60 * 10, {
-        download: forcarDownload ? row.arquivo_nome || true : undefined,
-      });
+      .download(row.arquivo_path);
     if (error) throw error;
+    if (!blob) {
+      return NextResponse.json({ error: "Arquivo não encontrado." }, { status: 404 });
+    }
 
-    return NextResponse.redirect(data.signedUrl, {
-      headers: { "Cache-Control": "no-store" },
+    const buf = await blob.arrayBuffer();
+
+    // Content-Disposition: nome ASCII (fallback) + nome real em UTF-8 (RFC 5987)
+    const nome = row.arquivo_nome || "relatorio";
+    const asciiNome = nome
+      .normalize("NFKD")
+      .replace(/[\u0300-\u036f]/g, "") // remove acentos
+      .replace(/["\\]/g, "") // remove aspas/barras que quebram o header
+      .replace(/[^\x20-\x7E]/g, "_"); // demais não-ASCII viram "_"
+    const disp = forcarDownload ? "attachment" : "inline";
+
+    return new NextResponse(buf, {
+      headers: {
+        "Content-Type": row.mime || blob.type || "application/octet-stream",
+        "Content-Disposition": `${disp}; filename="${asciiNome}"; filename*=UTF-8''${encodeURIComponent(nome)}`,
+        "Content-Length": String(buf.byteLength),
+        "Cache-Control": "private, no-store",
+      },
     });
   } catch (e) {
     return NextResponse.json(
