@@ -2,7 +2,7 @@
 import { useMemo } from "react";
 import Link from "next/link";
 import { useDashboard } from "@/lib/dashboardContext";
-import { byCreative, themeCreative, CreativeStat } from "@/lib/transform";
+import { byCreative, shortCreative, CreativeStat } from "@/lib/transform";
 import { fmtBRL, fmtInt, fmtPct } from "@/lib/format";
 import { CreativeComparison } from "@/components/dashboard/charts/CreativeComparison";
 import { CreativeGallery } from "@/components/dashboard/CreativeGallery";
@@ -16,7 +16,7 @@ export default function CriativosPage() {
   const bestCtr = useMemo(() => [...creatives].sort((a, b) => b.kpis.ctr - a.kpis.ctr)[0], [creatives]);
 
   const columns: Column<CreativeStat>[] = [
-    { key: "name", label: "Criativo", sortValue: (c) => themeCreative(c.ad_name), render: (c) => `${c.short} · ${themeCreative(c.ad_name)}` },
+    { key: "name", label: "Criativo", wrap: true, className: "min-w-[220px] max-w-[360px] whitespace-normal break-words leading-snug", sortValue: (c) => c.ad_name, render: (c) => c.ad_name },
     { key: "spend", label: "Investido", align: "right", sortValue: (c) => c.kpis.spend, render: (c) => fmtBRL(c.kpis.spend) },
     { key: "impressions", label: "Impressões", align: "right", sortValue: (c) => c.kpis.impressions, render: (c) => fmtInt(c.kpis.impressions) },
     { key: "reach", label: "Alcance", align: "right", sortValue: (c) => c.kpis.reach, render: (c) => fmtInt(c.kpis.reach) },
@@ -36,7 +36,7 @@ export default function CriativosPage() {
         </h2>
         {bestCtr && (
           <p className="mt-2 max-w-xl text-sm text-white/85">
-            Melhor desempenho de cliques: <strong>{themeCreative(bestCtr.ad_name)}</strong> com CTR de {fmtPct(bestCtr.kpis.ctr)}.
+            Melhor desempenho de cliques: <strong>{shortCreative(bestCtr.ad_name)}</strong> com CTR de {fmtPct(bestCtr.kpis.ctr)}.
           </p>
         )}
         <Link
@@ -60,7 +60,7 @@ export default function CriativosPage() {
           subtitle="Clique no cabeçalho para ordenar"
           className="lg:col-span-7"
         >
-          <SortableTable columns={columns} rows={creatives} initialSort="spend" />
+          <SortableTable columns={columns} rows={creatives} initialSort="spend" pageSize={5} />
         </ChartCard>
       </div>
 

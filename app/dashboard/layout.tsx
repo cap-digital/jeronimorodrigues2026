@@ -2,7 +2,7 @@ import { fetchInsights } from "@/lib/fetchInsights";
 import { DashboardProvider } from "@/lib/dashboardContext";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 
-export const revalidate = 300;
+export const revalidate = 60;
 
 export const metadata = {
   title: "Painel · Jerônimo Rodrigues 2026",

@@ -252,8 +252,8 @@ export function byCreative(rows: MetaRow[]): CreativeStat[] {
 }
 
 export function shortCreative(ad_name: string): string {
-  // "[AD 01] É escola que não acaba mais!" -> "AD 01"
-  const m = ad_name.match(/\[(AD\s*\d+)\]/i);
+  // "[AD 01] ..." ou "[AD 01 - Editoria - ...]" -> "AD 01"
+  const m = ad_name.match(/\[\s*(AD\s*\d+)/i);
   return m ? m[1].replace(/\s+/g, " ").toUpperCase() : ad_name.slice(0, 12);
 }
 export function themeCreative(ad_name: string): string {

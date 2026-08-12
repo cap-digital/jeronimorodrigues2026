@@ -15,7 +15,9 @@ export async function fetchInsights(): Promise<InsightsResponse | null> {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ name: "Functions" }),
-      next: { revalidate: 300 },
+      // cache curto (60s): a base cresce (novos criativos) e precisamos do total
+      // atual sem refazer o fetch pesado a cada request
+      next: { revalidate: 60 },
     });
     if (!res.ok) return null;
     return (await res.json()) as InsightsResponse;

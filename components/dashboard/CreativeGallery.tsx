@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { CreativeStat, themeCreative } from "@/lib/transform";
+import { CreativeStat } from "@/lib/transform";
 import { CREATIVE_COLORS } from "@/lib/theme";
 import { fmtBRL, fmtCompact, fmtInt, fmtPct } from "@/lib/format";
 import { PTStar } from "@/components/brand/PTStar";
@@ -43,9 +43,14 @@ export function CreativeGallery({
   creatives: CreativeStat[];
   className?: string;
 }) {
+  const PAGE = 12;
   const [sort, setSort] = useState<SortKey>("spend");
+  const [page, setPage] = useState(0);
   const order = new Map(creatives.map((c, i) => [c.ad_name, CREATIVE_COLORS[i % CREATIVE_COLORS.length]]));
   const sorted = [...creatives].sort((a, b) => SORTS[sort].get(b) - SORTS[sort].get(a));
+  const totalPages = Math.max(1, Math.ceil(sorted.length / PAGE));
+  const pageClamped = Math.min(page, totalPages - 1);
+  const visible = sorted.slice(pageClamped * PAGE, pageClamped * PAGE + PAGE);
 
   return (
     <section className={`panel p-4 sm:p-5 fade-up ${className}`}>
@@ -58,7 +63,10 @@ export function CreativeGallery({
           <span className="text-xs text-ink-muted">Ordenar por</span>
           <Segmented
             value={sort}
-            onChange={(v) => setSort(v as SortKey)}
+            onChange={(v) => {
+              setSort(v as SortKey);
+              setPage(0);
+            }}
             options={[
               { value: "spend", label: "Invest." },
               { value: "reach", label: "Alcance" },
@@ -73,7 +81,8 @@ export function CreativeGallery({
         <p className="py-8 text-center text-sm text-ink-secondary">Sem criativos para este período.</p>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          {sorted.map((c, rank) => {
+          {visible.map((c, i) => {
+            const rank = pageClamped * PAGE + i;
             const color = order.get(c.ad_name)!;
             const stats = [
               { l: "Investido", v: fmtBRL(c.kpis.spend) },
@@ -96,7 +105,7 @@ export function CreativeGallery({
                   </span>
                 </div>
                 <div className="p-3.5">
-                  <p className="font-display text-base leading-tight text-ink">{themeCreative(c.ad_name)}</p>
+                  <p className="font-display text-sm leading-tight text-ink">{c.ad_name}</p>
                   <div className="mt-3 grid grid-cols-2 gap-2">
                     {stats.map((s) => (
                       <div key={s.l} className="rounded-lg bg-surface-3 px-2.5 py-1.5">
@@ -119,6 +128,33 @@ export function CreativeGallery({
               </article>
             );
           })}
+        </div>
+      )}
+
+      {totalPages > 1 && (
+        <div className="mt-4 flex items-center justify-between gap-3">
+          <span className="text-xs text-ink-muted">
+            {pageClamped * PAGE + 1}–{Math.min((pageClamped + 1) * PAGE, sorted.length)} de {sorted.length}
+          </span>
+          <div className="flex items-center gap-1.5">
+            <button
+              onClick={() => setPage((p) => Math.max(0, p - 1))}
+              disabled={pageClamped === 0}
+              className="rounded-lg border px-2.5 py-1.5 text-xs font-medium text-ink-secondary transition-colors hover:text-ink disabled:opacity-40"
+            >
+              Anterior
+            </button>
+            <span className="px-1 text-xs text-ink-muted">
+              {pageClamped + 1}/{totalPages}
+            </span>
+            <button
+              onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+              disabled={pageClamped >= totalPages - 1}
+              className="rounded-lg border px-2.5 py-1.5 text-xs font-medium text-ink-secondary transition-colors hover:text-ink disabled:opacity-40"
+            >
+              Próxima
+            </button>
+          </div>
         </div>
       )}
     </section>

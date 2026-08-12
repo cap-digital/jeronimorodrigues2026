@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { fetchInsights } from "@/lib/fetchInsights";
 
-export const revalidate = 300; // cache de 5 min no servidor
+export const revalidate = 60; // cache curto de 1 min
 
 export async function GET() {
   const data = await fetchInsights();
@@ -13,7 +13,7 @@ export async function GET() {
   }
   return NextResponse.json(data, {
     headers: {
-      "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
+      "Cache-Control": "public, s-maxage=60, stale-while-revalidate=120",
     },
   });
 }

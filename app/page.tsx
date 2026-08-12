@@ -4,7 +4,7 @@ import { sumRows, toKpis } from "@/lib/transform";
 import { fmtBRLCompact, fmtCompact, fmtDateTime } from "@/lib/format";
 import { PTStar } from "@/components/brand/PTStar";
 
-export const revalidate = 300;
+export const revalidate = 60;
 
 export default async function Home() {
   const data = await fetchInsights();

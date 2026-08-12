@@ -1,19 +1,8 @@
 "use client";
 import { useState } from "react";
-import {
-  Bar,
-  BarChart,
-  Cell,
-  LabelList,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
 import { ChartCard, Segmented, EmptyState } from "../ui";
-import { TooltipBox } from "../ChartTooltip";
-import { CreativeStat, themeCreative } from "@/lib/transform";
-import { CHART, CREATIVE_COLORS } from "@/lib/theme";
+import { CreativeStat } from "@/lib/transform";
+import { CREATIVE_COLORS } from "@/lib/theme";
 import { fmtBRL, fmtInt, fmtPct } from "@/lib/format";
 
 type MetricKey = "spend" | "reach" | "impressions" | "clicks" | "ctr" | "engagement";
@@ -37,19 +26,21 @@ export function CreativeComparison({
   const m = METRICS[metric];
   // cor segue o criativo (entidade), não o valor
   const colorOf = new Map(creatives.map((c, i) => [c.ad_name, CREATIVE_COLORS[i % CREATIVE_COLORS.length]]));
+  // apenas os 7 melhores na métrica escolhida
   const data = creatives
     .map((c) => ({
-      name: themeCreative(c.ad_name),
-      short: c.short,
+      name: c.ad_name,
       value: m.get(c),
       color: colorOf.get(c.ad_name)!,
     }))
-    .sort((a, b) => b.value - a.value);
+    .sort((a, b) => b.value - a.value)
+    .slice(0, 7);
+  const max = Math.max(0, ...data.map((d) => d.value));
 
   return (
     <ChartCard
       title="Comparativo de criativos"
-      subtitle={`Criativos ordenados por ${m.label.toLowerCase()}`}
+      subtitle={`7 melhores por ${m.label.toLowerCase()}`}
       className={className}
       right={
         <Segmented
@@ -68,48 +59,28 @@ export function CreativeComparison({
       {data.length === 0 ? (
         <EmptyState />
       ) : (
-        <div className="h-[240px] w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              layout="vertical"
-              data={data}
-              margin={{ top: 4, right: 64, left: 4, bottom: 0 }}
-              barCategoryGap={16}
-            >
-              <XAxis type="number" hide />
-              <YAxis
-                type="category"
-                dataKey="name"
-                tick={{ fill: CHART.inkSecondary, fontSize: 12 }}
-                axisLine={false}
-                tickLine={false}
-                width={78}
-              />
-              <Tooltip
-                cursor={{ fill: "rgba(0,0,0,0.03)" }}
-                content={({ active, payload }) =>
-                  active && payload?.length ? (
-                    <TooltipBox
-                      title={payload[0].payload.name}
-                      rows={[{ label: m.label, value: m.fmt(payload[0].payload.value), color: payload[0].payload.color }]}
+        <div className="space-y-4">
+          {data.map((d) => {
+            const pct = max > 0 && d.value > 0 ? Math.max(3, (d.value / max) * 100) : 0;
+            return (
+              <div key={d.name}>
+                {/* nome do anúncio, completo (com AD XX e colchetes), em cima */}
+                <p className="mb-1.5 text-[13px] leading-snug text-ink">{d.name}</p>
+                {/* barra embaixo + valor na ponta */}
+                <div className="flex items-center gap-3">
+                  <div className="relative h-6 flex-1 overflow-hidden rounded-md bg-surface-3">
+                    <div
+                      className="h-full rounded-md transition-all"
+                      style={{ width: `${pct}%`, background: d.color }}
                     />
-                  ) : null
-                }
-              />
-              <Bar dataKey="value" radius={[0, 6, 6, 0]} barSize={26}>
-                {data.map((d, i) => (
-                  <Cell key={i} fill={d.color} />
-                ))}
-                <LabelList
-                  dataKey="value"
-                  position="right"
-                  formatter={(v: number) => m.fmt(v)}
-                  fill={CHART.inkSecondary}
-                  fontSize={12}
-                />
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
+                  </div>
+                  <span className="w-[96px] shrink-0 text-right text-sm font-medium tabular text-ink">
+                    {m.fmt(d.value)}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
     </ChartCard>

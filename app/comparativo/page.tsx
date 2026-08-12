@@ -1,7 +1,7 @@
 import { fetchInsights } from "@/lib/fetchInsights";
 import { ComparativoView } from "@/components/comparativo/ComparativoView";
 
-export const revalidate = 300;
+export const revalidate = 60;
 
 export const metadata = {
   title: "Comparativo de Criativos · Jerônimo Rodrigues 2026",
